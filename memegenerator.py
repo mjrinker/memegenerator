@@ -4,15 +4,20 @@ from PIL import ImageFont
 from PIL import Image
 from PIL import ImageDraw
 
+import subprocess
 import sys
 
 fonts_path = ''
+open_folder_args = []
 if sys.platform in ['linux', 'linux2']:
     fonts_path = '/usr/share/fonts'
+    open_folder_args = ['nautilus', '--select']
 elif sys.platform == 'darwin':
     fonts_path = '/Library/Fonts'
+    open_folder_args = ['open', '-R']
 elif sys.platform == 'win32':
     fonts_path = 'C:/Windows/Fonts'
+    open_folder_args = ['explorer.exe', '/select,']
 
 
 def make_meme(top_string, bottom_string, filename):
@@ -55,6 +60,7 @@ def make_meme(top_string, bottom_string, filename):
     draw.text(bottom_text_position, bottom_string, (255,255,255), font=font)
 
     img.save('temp.png')
+    subprocess.call(open_folder_args + ['temp.png'])
 
 
 def get_upper(some_data):
