@@ -6,19 +6,28 @@ from PIL import ImageDraw
 
 import sys
 
+fonts_path = ''
+if sys.platform in ['linux', 'linux2']:
+    fonts_path = '/usr/share/fonts'
+elif sys.platform == 'darwin':
+    fonts_path = '/Library/Fonts'
+elif sys.platform == 'win32':
+    fonts_path = 'C:/Windows/Fonts'
+
 
 def make_meme(top_string, bottom_string, filename):
+    font_path = f'{fonts_path}/Impact.ttf'
     img = Image.open(filename)
     image_size = img.size
 
     # find biggest font size that works
     font_size = int(image_size[1]/5)
-    font = ImageFont.truetype('/Library/Fonts/Impact.ttf', font_size)
+    font = ImageFont.truetype(font_path, font_size)
     top_text_size = font.getsize(top_string)
     bottom_text_size = font.getsize(bottom_string)
     while top_text_size[0] > image_size[0]-20 or bottom_text_size[0] > image_size[0]-20:
         font_size = font_size - 1
-        font = ImageFont.truetype('/Library/Fonts/Impact.ttf', font_size)
+        font = ImageFont.truetype(font_path, font_size)
         top_text_size = font.getsize(top_string)
         bottom_text_size = font.getsize(bottom_string)
 
