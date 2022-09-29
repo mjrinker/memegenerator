@@ -47,14 +47,35 @@ Launching the script with only one argument will fall back and use a template fi
 ``` bash
 $ python memegenerator.py memetype "Lorem Ipsum"
 ```
-This is similar to One Argument: The second Argument will be printed as the bottom caption on the meme template of your choosing.
+or
+
+``` bash
+$ python memegenerator.py /output/path/to/save/to "Lorem Ipsum"
+```
+This is similar to One Argument, either:
+1. The second Argument will be printed as the bottom caption on the meme template of your choosing.
+1. The second Argument will be printed as the bottom caption, saving to the output path of your choosing and will fall back and use a template file called `standard.jpg`.
 #### Three Arguments
 ``` bash
 $ python memegenerator.py memetype "Lorem Ipsum" "Dolor Sit"
 ```
+or
+``` bash
+$ python memegenerator.py /output/path/to/save/to "Lorem Ipsum" "Dolor Sit"
+```
+or
+``` bash
+$ python memegenerator.py memetype /output/path/to/save/to "Lorem Ipsum"
+```
 This uses the second Argument as top caption, and the third as bottom caption.
+Alternatively, the second Argument is the output path and the third is the bottom caption.
+#### Four Arguments
+``` bash
+$ python memegenerator.py memetype /output/path/to/save/to "Lorem Ipsum" "Dolor Sit"
+```
+This uses the second Argument as the output path, the third as top caption, and the fourth as bottom caption.
 
-The Memegenerator doesn't support more than three Arguments at the moment.
+The Memegenerator doesn't support more than four Arguments at the moment.
 
 ### Using the Alfred Workflow
 The Workflow takes the same arguments as the script and works the same. As a bonus, it will open the `temp.png` with Preview.app, select everything, copy it to the clipboard and close Preview.app again.

@@ -4,6 +4,7 @@ from PIL import ImageFont
 from PIL import Image
 from PIL import ImageDraw
 
+import os
 import subprocess
 import sys
 
@@ -20,7 +21,7 @@ elif sys.platform == 'win32':
     open_folder_args = ['explorer.exe', '/select,']
 
 
-def make_meme(top_string, bottom_string, filename):
+def make_meme(top_string, bottom_string, filename, output_path='.'):
     font_path = f'{fonts_path}/Impact.ttf'
     img = Image.open(filename)
     image_size = img.size
@@ -59,8 +60,10 @@ def make_meme(top_string, bottom_string, filename):
     draw.text(top_text_position, top_string, (255,255,255), font=font)
     draw.text(bottom_text_position, bottom_string, (255,255,255), font=font)
 
-    img.save('temp.png')
-    subprocess.call(open_folder_args + ['temp.png'])
+    output_filename = os.path.abspath(f'{output_path}/temp.png')
+    print(output_filename)
+    img.save(output_filename)
+    subprocess.call(open_folder_args + [output_filename])
 
 
 def get_upper(some_data):
@@ -89,35 +92,53 @@ def get_lower(some_data):
 
 
 if __name__ == '__main__':
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
     args_len = len(sys.argv)
     top_string = ''
     meme = 'standard'
+    output_path = '.'
 
     if args_len == 1:
         # no args except the launch of the script
         print('at least one argument is required')
 
     elif args_len == 2:
-        # only one argument, use standard meme
+        # only one argument (bottom line), use standard meme
         bottom_string = get_upper(sys.argv[-1])
 
     elif args_len == 3:
-        # args give meme and one line
+        # args give meme (or output path, and use standard meme) and bottom line
         bottom_string = get_upper(sys.argv[-1])
-        meme = get_lower(sys.argv[1])
+        if os.path.exists(sys.argv[1]):
+            output_path = sys.argv[1]
+        else:
+            meme = get_lower(sys.argv[1])
 
     elif args_len == 4:
-        # args give meme and two lines
+        # args give meme (or output path) and two lines (or output path and bottom line)
+        if os.path.exists(sys.argv[-2]):
+            output_path = sys.argv[-2]
+        else:
+            top_string = get_upper(sys.argv[-2])
+        bottom_string = get_upper(sys.argv[-1])
+        if not os.path.exists(sys.argv[-2]) and os.path.exists(sys.argv[1]):
+            output_path = sys.argv[1]
+        else:
+            meme = get_lower(sys.argv[1])
+
+    elif args_len == 5:
+        # args give meme and output path and two lines
         top_string = get_upper(sys.argv[-2])
         bottom_string = get_upper(sys.argv[-1])
         meme = get_lower(sys.argv[1])
+        output_path = sys.argv[2]
+
     else:
         # so many args
         # what do they mean
         # too intense
-        print('too many arguments (max: 4)')
+        print('too many arguments (max: 5)')
 
-    print(meme)	
     filename = f'{meme}.jpg'
-    make_meme(top_string, bottom_string, filename)	
+    make_meme(top_string, bottom_string, filename, output_path)
 
