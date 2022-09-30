@@ -1,6 +1,18 @@
 # Python Meme Generator
 ## Bonus: Alfred-Workflow
 
+## Quick Usage
+
+```bash
+$ python memegenerator.py "Bottom text"
+$ python memegenerator.py meme_filename "Bottom text"
+$ python memegenerator.py /output/path/to/save/to "Bottom text"
+$ python memegenerator.py meme_filename "Top text" "Bottom text"
+$ python memegenerator.py /output/path/to/save/to "Top text" "Bottom text"
+$ python memegenerator.py meme_filename /output/path/to/save/to "Bottom text"
+$ python memegenerator.py meme_filename /output/path/to/save/to "Top text" "Bottom text"
+```
+
 ## Introduction
 This is a Meme-Generator for Python, using PIL (with FreeType). It can put captions at the top and the bottom of images.
 
@@ -45,7 +57,7 @@ Launching the script with only one argument will fall back and use a template fi
 
 #### Two Arguments
 ``` bash
-$ python memegenerator.py memetype "Lorem Ipsum"
+$ python memegenerator.py meme_filename "Lorem Ipsum"
 ```
 or
 
@@ -57,7 +69,7 @@ This is similar to One Argument, either:
 1. The second Argument will be printed as the bottom caption, saving to the output path of your choosing and will fall back and use a template file called `standard.jpg`.
 #### Three Arguments
 ``` bash
-$ python memegenerator.py memetype "Lorem Ipsum" "Dolor Sit"
+$ python memegenerator.py meme_filename "Lorem Ipsum" "Dolor Sit"
 ```
 or
 ``` bash
@@ -65,13 +77,13 @@ $ python memegenerator.py /output/path/to/save/to "Lorem Ipsum" "Dolor Sit"
 ```
 or
 ``` bash
-$ python memegenerator.py memetype /output/path/to/save/to "Lorem Ipsum"
+$ python memegenerator.py meme_filename /output/path/to/save/to "Lorem Ipsum"
 ```
 This uses the second Argument as top caption, and the third as bottom caption.
 Alternatively, the second Argument is the output path and the third is the bottom caption.
 #### Four Arguments
 ``` bash
-$ python memegenerator.py memetype /output/path/to/save/to "Lorem Ipsum" "Dolor Sit"
+$ python memegenerator.py meme_filename /output/path/to/save/to "Lorem Ipsum" "Dolor Sit"
 ```
 This uses the second Argument as the output path, the third as top caption, and the fourth as bottom caption.
 
