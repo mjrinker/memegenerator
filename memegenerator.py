@@ -42,24 +42,26 @@ def make_meme(top_string, bottom_string, filepath, output_path='.'):
             bottom_string_to_use = bottom_string[split_space_index:].strip()
 
     # find biggest font size that works
-    font_size = int(image_size[1] / 5)
+    font_size = int(image_size[1] / 7)
     font = ImageFont.truetype(font_path, font_size)
     top_text_size = get_text_size(font, top_string_to_use)
     bottom_text_size = get_text_size(font, bottom_string_to_use)
+    y_offset = -8
     while top_text_size[0] > image_size[0] - 20 or bottom_text_size[0] > image_size[0] - 20:
-        font_size = font_size - 1
+        y_offset += 0.25
+        font_size -= 1
         font = ImageFont.truetype(font_path, font_size)
         top_text_size = get_text_size(font, top_string_to_use)
         bottom_text_size = get_text_size(font, bottom_string_to_use)
 
     # find top centered position for top text
     top_text_position_x = (image_size[0] / 2) - (top_text_size[0] / 2)
-    top_text_position_y = 0
+    top_text_position_y = round(y_offset)
     top_text_position = (top_text_position_x, top_text_position_y)
 
     # find bottom centered position for bottom text
     bottom_text_position_x = (image_size[0] / 2) - (bottom_text_size[0] / 2)
-    bottom_text_position_y = image_size[1] - bottom_text_size[1]
+    bottom_text_position_y = image_size[1] - bottom_text_size[1] + round(y_offset)
     bottom_text_position = (bottom_text_position_x, bottom_text_position_y)
 
     draw = ImageDraw.Draw(img)
@@ -69,11 +71,11 @@ def make_meme(top_string, bottom_string, filepath, output_path='.'):
     outline_range = int(font_size / 15)
     for x in range(-outline_range, outline_range + 1):
         for y in range(-outline_range, outline_range + 1):
-            draw.text((top_text_position[0] + x, top_text_position[1] + y), top_string_to_use, (0,0,0), font=font)
-            draw.text((bottom_text_position[0] + x, bottom_text_position[1] + y), bottom_string_to_use, (0,0,0), font=font)
+            draw.text((top_text_position[0] + x, top_text_position[1] + y), top_string_to_use, (0, 0, 0), font=font)
+            draw.text((bottom_text_position[0] + x, bottom_text_position[1] + y), bottom_string_to_use, (0, 0, 0), font=font)
 
-    draw.text(top_text_position, top_string_to_use, (255,255,255), font=font)
-    draw.text(bottom_text_position, bottom_string_to_use, (255,255,255), font=font)
+    draw.text(top_text_position, top_string_to_use, (255, 255, 255), font=font)
+    draw.text(bottom_text_position, bottom_string_to_use, (255, 255, 255), font=font)
 
     temp_prefix = 'temp-' if output_path == '.' else ''
     string_for_name = top_string_to_use if len(top_string_to_use) > 0 else bottom_string_to_use
