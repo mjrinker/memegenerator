@@ -45,6 +45,8 @@ If you want to use the Generator from the Command Line, you only put in `python 
 
 The `temp-{text-snippet}.png` will have the same size as the template you put in. It will be overwritten the next time you use the Generator, so rename or move it, if you want to keep it.
 
+If no top text is passed in and the bottom text is longer than 20 characters, the text will automatically get split between the top and bottom.
+
 ### Arguments
 
 The Generator takes several arguments and treats them as follows:

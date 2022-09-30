@@ -9,6 +9,9 @@ import re
 import subprocess
 import sys
 
+MAX_BOTTOM_TEXT_LENGTH = 20
+FONT = "Impact"
+
 fonts_path = ''
 filepath_slash = '/'
 open_folder_args = []
@@ -25,29 +28,37 @@ elif sys.platform == 'win32':
 
 
 def make_meme(top_string, bottom_string, filepath, output_path='.'):
-    font_path = f'{fonts_path}{filepath_slash}Impact.ttf'
+    font_path = f'{fonts_path}{filepath_slash}{FONT}.ttf'
     filename = os.path.basename(filepath)
     img = Image.open(filepath)
     image_size = img.size
 
+    top_string_to_use = top_string
+    bottom_string_to_use = bottom_string
+    if len(top_string) == 0 and len(bottom_string) > MAX_BOTTOM_TEXT_LENGTH:
+        split_space_index = bottom_string.find(' ', len(bottom_string) // 2)
+        if split_space_index > -1:
+            top_string_to_use = bottom_string[:split_space_index].strip()
+            bottom_string_to_use = bottom_string[split_space_index:].strip()
+
     # find biggest font size that works
-    font_size = int(image_size[1]/5)
+    font_size = int(image_size[1] / 5)
     font = ImageFont.truetype(font_path, font_size)
-    top_text_size = get_text_size(font, top_string)
-    bottom_text_size = get_text_size(font, bottom_string)
-    while top_text_size[0] > image_size[0]-20 or bottom_text_size[0] > image_size[0]-20:
+    top_text_size = get_text_size(font, top_string_to_use)
+    bottom_text_size = get_text_size(font, bottom_string_to_use)
+    while top_text_size[0] > image_size[0] - 20 or bottom_text_size[0] > image_size[0] - 20:
         font_size = font_size - 1
         font = ImageFont.truetype(font_path, font_size)
-        top_text_size = get_text_size(font, top_string)
-        bottom_text_size = get_text_size(font, bottom_string)
+        top_text_size = get_text_size(font, top_string_to_use)
+        bottom_text_size = get_text_size(font, bottom_string_to_use)
 
     # find top centered position for top text
-    top_text_position_x = (image_size[0]/2) - (top_text_size[0]/2)
+    top_text_position_x = (image_size[0] / 2) - (top_text_size[0] / 2)
     top_text_position_y = 0
     top_text_position = (top_text_position_x, top_text_position_y)
 
     # find bottom centered position for bottom text
-    bottom_text_position_x = (image_size[0]/2) - (bottom_text_size[0]/2)
+    bottom_text_position_x = (image_size[0] / 2) - (bottom_text_size[0] / 2)
     bottom_text_position_y = image_size[1] - bottom_text_size[1]
     bottom_text_position = (bottom_text_position_x, bottom_text_position_y)
 
@@ -55,17 +66,17 @@ def make_meme(top_string, bottom_string, filepath, output_path='.'):
 
     # draw outlines
     # there may be a better way
-    outline_range = int(font_size/15)
-    for x in range(-outline_range, outline_range+1):
-        for y in range(-outline_range, outline_range+1):
-            draw.text((top_text_position[0]+x, top_text_position[1]+y), top_string, (0,0,0), font=font)
-            draw.text((bottom_text_position[0]+x, bottom_text_position[1]+y), bottom_string, (0,0,0), font=font)
+    outline_range = int(font_size / 15)
+    for x in range(-outline_range, outline_range + 1):
+        for y in range(-outline_range, outline_range + 1):
+            draw.text((top_text_position[0] + x, top_text_position[1] + y), top_string_to_use, (0,0,0), font=font)
+            draw.text((bottom_text_position[0] + x, bottom_text_position[1] + y), bottom_string_to_use, (0,0,0), font=font)
 
-    draw.text(top_text_position, top_string, (255,255,255), font=font)
-    draw.text(bottom_text_position, bottom_string, (255,255,255), font=font)
+    draw.text(top_text_position, top_string_to_use, (255,255,255), font=font)
+    draw.text(bottom_text_position, bottom_string_to_use, (255,255,255), font=font)
 
     temp_prefix = 'temp-' if output_path == '.' else ''
-    string_for_name = top_string if len(top_string) > 0 else bottom_string
+    string_for_name = top_string_to_use if len(top_string_to_use) > 0 else bottom_string_to_use
     output_filename = os.path.abspath(output_path) + filepath_slash + temp_prefix + re.sub(r'\W+', '-', string_for_name.lower()) + '-' + re.sub('.jpg$', '', filename) + '.png'
     print(output_filename)
     img.save(output_filename)
