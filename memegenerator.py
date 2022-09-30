@@ -33,13 +33,13 @@ def make_meme(top_string, bottom_string, filepath, output_path='.'):
     # find biggest font size that works
     font_size = int(image_size[1]/5)
     font = ImageFont.truetype(font_path, font_size)
-    top_text_size = font.getsize(top_string)
-    bottom_text_size = font.getsize(bottom_string)
+    top_text_size = get_text_size(font, top_string)
+    bottom_text_size = get_text_size(font, bottom_string)
     while top_text_size[0] > image_size[0]-20 or bottom_text_size[0] > image_size[0]-20:
         font_size = font_size - 1
         font = ImageFont.truetype(font_path, font_size)
-        top_text_size = font.getsize(top_string)
-        bottom_text_size = font.getsize(bottom_string)
+        top_text_size = get_text_size(font, top_string)
+        bottom_text_size = get_text_size(font, bottom_string)
 
     # find top centered position for top text
     top_text_position_x = (image_size[0]/2) - (top_text_size[0]/2)
@@ -95,6 +95,11 @@ def get_lower(some_data):
         result = some_data.lower()
 
     return result
+
+
+def get_text_size(font, text):
+    text_bbox = font.getbbox(text)
+    return (text_bbox[2] - text_bbox[0], text_bbox[3] - text_bbox[1] + 12)
 
 
 if __name__ == '__main__':
