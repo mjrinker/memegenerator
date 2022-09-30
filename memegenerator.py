@@ -5,10 +5,12 @@ from PIL import Image
 from PIL import ImageDraw
 
 import os
+import re
 import subprocess
 import sys
 
 fonts_path = ''
+filepath_slash = '/'
 open_folder_args = []
 if sys.platform in ['linux', 'linux2']:
     fonts_path = '/usr/share/fonts'
@@ -17,13 +19,15 @@ elif sys.platform == 'darwin':
     fonts_path = '/Library/Fonts'
     open_folder_args = ['open', '-R']
 elif sys.platform == 'win32':
-    fonts_path = 'C:/Windows/Fonts'
+    fonts_path = 'C:\\Windows\\Fonts'
+    filepath_slash = '\\'
     open_folder_args = ['explorer.exe', '/select,']
 
 
-def make_meme(top_string, bottom_string, filename, output_path='.'):
-    font_path = f'{fonts_path}/Impact.ttf'
-    img = Image.open(filename)
+def make_meme(top_string, bottom_string, filepath, output_path='.'):
+    font_path = f'{fonts_path}{filepath_slash}Impact.ttf'
+    filename = os.path.basename(filepath)
+    img = Image.open(filepath)
     image_size = img.size
 
     # find biggest font size that works
@@ -60,7 +64,9 @@ def make_meme(top_string, bottom_string, filename, output_path='.'):
     draw.text(top_text_position, top_string, (255,255,255), font=font)
     draw.text(bottom_text_position, bottom_string, (255,255,255), font=font)
 
-    output_filename = os.path.abspath(f'{output_path}/temp.png')
+    temp_prefix = 'temp-' if output_path == '.' else ''
+    string_for_name = top_string if len(top_string) > 0 else bottom_string
+    output_filename = os.path.abspath(output_path) + filepath_slash + temp_prefix + re.sub(r'\W+', '-', string_for_name.lower()) + '-' + re.sub('.jpg$', '', filename) + '.png'
     print(output_filename)
     img.save(output_filename)
     subprocess.call(open_folder_args + [output_filename])
@@ -86,7 +92,7 @@ def get_lower(some_data):
     try:
         result = some_data.decode('utf-8').lower()
     except:
-        result = some_data.lower()		
+        result = some_data.lower()
 
     return result
 
@@ -112,7 +118,7 @@ if __name__ == '__main__':
         if os.path.exists(sys.argv[1]):
             output_path = sys.argv[1]
         else:
-            meme = get_lower(sys.argv[1])
+            meme = sys.argv[1]
 
     elif args_len == 4:
         # args give meme (or output path) and two lines (or output path and bottom line)
@@ -124,13 +130,13 @@ if __name__ == '__main__':
         if not os.path.exists(sys.argv[-2]) and os.path.exists(sys.argv[1]):
             output_path = sys.argv[1]
         else:
-            meme = get_lower(sys.argv[1])
+            meme = sys.argv[1]
 
     elif args_len == 5:
         # args give meme and output path and two lines
         top_string = get_upper(sys.argv[-2])
         bottom_string = get_upper(sys.argv[-1])
-        meme = get_lower(sys.argv[1])
+        meme = sys.argv[1]
         output_path = sys.argv[2]
 
     else:
@@ -139,6 +145,6 @@ if __name__ == '__main__':
         # too intense
         print('too many arguments (max: 5)')
 
-    filename = f'{meme}.jpg'
-    make_meme(top_string, bottom_string, filename, output_path)
+    filepath = f'{re.sub(r".jpg$", "", meme)}.jpg'
+    make_meme(top_string, bottom_string, filepath, output_path)
 

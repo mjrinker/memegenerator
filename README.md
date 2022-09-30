@@ -41,9 +41,9 @@ So, assuming the script is in using `~/dev/memegenerator/`, all the image files 
 
 For Example: If you wanted to create a Success Kid-Meme, you'd put a file `successkid.jpg` (with the empty template) into `~/dev/memegenerator/`. It's really not that hard.
 
-If you want to use the Generator from the Command Line, you only put in `python memegenerator.py successkid "Top Caption" "Bottom Caption"`, hit Enter, and it will generate `temp.png` and save it to the same folder the Generator is located in.
+If you want to use the Generator from the Command Line, you only put in `python memegenerator.py successkid "Top Caption" "Bottom Caption"`, hit Enter, and it will generate `temp-{text-snippet}.png`, where {text-snippet} is either the top text or the bottom text, and save it to the same folder the Generator is located in, unless specified elsewhere, in which case the file will just be named `{text-snippet}.png`.
 
-The `temp.png` will have the same size as the template you put in. It will be overwritten the next time you use the Generator, so rename or move it, if you want to keep it.
+The `temp-{text-snippet}.png` will have the same size as the template you put in. It will be overwritten the next time you use the Generator, so rename or move it, if you want to keep it.
 
 ### Arguments
 
